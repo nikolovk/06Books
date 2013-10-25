@@ -21,12 +21,33 @@ if (isset($_GET['book_id'])) {
         $data['book']['title'] = $row['book_title'];
         $data['book']['authors'][] = $row['author_name'];
     }
-    if (count($data['book']) > 0) {
+    if (isset($data['book']) && count($data['book']) > 0) {
+        if ($_POST && isset($_SESSION['isLogged']) && $_SESSION['isLogged'] === true) {
+            $trimedComment = htmlspecialchars(trim($_POST['comment']));
+            $content = mysqli_real_escape_string($connection, $trimedComment);
+            if (empty($content) || mb_strlen($content, 'utf8') < 10) {
+                $data['errors']['content'] = 'Коментарът трябва да бъде поне 10 символа!';
+                $data['newComment'] = $content;
+            } else {
+                $sqlInsert = 'INSERT INTO comments (content,user_id,book_id,date) 
+                            VALUES ("' . $content . '",' . $_SESSION['id'] . ',' . $book_id . ',
+                           "' . (new DateTime('NOW', new DateTimeZone('EET')))->format('Y-m-d H:i:s') . '")';
+                $query = mysqli_query($connection, $sqlInsert);
+                if (!$query) {
+                    echo 'Connection problem';
+                    echo mysqli_error($connection);
+                    exit;
+                }
+            }
+        }
+
+
         $sqlComments = 'SELECT c.content, c.date, u.name
                         FROM comments AS c
                         INNER JOIN books AS b ON c.book_id = b.book_id
                         INNER JOIN users AS u ON c.user_id = u.id
-                        WHERE b.book_id =' . $book_id;
+                        WHERE b.book_id =' . $book_id .
+                ' ORDER BY c.date';
         $commentsQuery = mysqli_query($connection, $sqlComments);
         if (!$commentsQuery) {
             echo 'Connection problem';
@@ -36,16 +57,66 @@ if (isset($_GET['book_id'])) {
         while ($row = mysqli_fetch_assoc($commentsQuery)) {
             $data['comments']['content'][] = $row['content'];
             $data['comments']['name'][] = $row['name'];
-            $data['comments']['date'][] = new DateTime($row['date'],new DateTimeZone('EET'));
+            $data['comments']['date'][] = new DateTime($row['date'], new DateTimeZone('EET'));
         }
     } else {
-        $data['hasBook'] = false;
+        $data['errors']['hasBook'] = false;
     }
 } else {
-    $data['hasBook'] = false;
+    $data['errors']['hasBook'] = false;
 }
-
 include 'includes/header.php';
-print_r($data);
+if (isset($data['errors']['hasBook']) && $data['errors']['hasBook'] === false) {
+    echo '<p class="error">Няма такава книга!</p>';
+}
+if (isset($data['book']) && count($data['book']) > 0) {
+    ?>
+    <h2><?= $data['book']['title'] ?></h2>
+    <div>
+        <h3>Автори</h3>
+        <ul>
+            <?php
+            foreach ($data['book']['authors'] as $authorName) {
+                echo '<li>' . $authorName . '</li>';
+            }
+            ?>
+        </ul>
+    </div>
+    <div>
+        <h3>Коментари</h3>
+        <?php
+        if (isset($data['comments'])) {
+            $countComments = count($data['comments']['content']);
+            for ($index = 0; $index < $countComments; $index++) {
+                ?>
+                <div class="comment">
+                    <p class="content"><?= $data['comments']['content'][$index] ?></p>
+                    <p class="comment-footer">
+                        <strong>Автор:</strong> <?= $data['comments']['name'][$index] ?>
+                        <strong>Дата:</strong> <?= $data['comments']['date'][$index]->format('Y-m-d H:i') ?>
+                    </p>
+                </div>
+                <?php
+            }
+        } else {
+            echo '<div>Няма коментари</div>';
+        }
+        if (isset($_SESSION['isLogged']) && $_SESSION['isLogged'] === true) {
+            ?>
+            <div>
+                <h3>Нов Коментар</h3>
+                <form action="" method="POST">
+                    <p>
+                        <label for="comment"></label>
+                        <textarea name="comment"><?= (isset($data['newComment']) ? $data['newComment'] : '') ?></textarea>
+                        <span class="error"><?= (isset($data['errors']['content']) ? $data['errors']['content'] : '') ?></span>
+                    </p>
+                    <input type="submit" value="Добави" />
+                </form>
+            </div>
+        <?php } ?>
+    </div>
+    <?php
+}
 
 include 'includes/footer.php';

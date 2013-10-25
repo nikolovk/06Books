@@ -16,3 +16,7 @@ td,th{
 .error {
     color: red;
 }
+
+.comment-footer{
+    font-style: italic;
+}
