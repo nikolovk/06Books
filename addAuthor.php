@@ -37,32 +37,33 @@ include 'includes/header.php';
 ?>
 
 <h2>Добави автор</h2>
-<p><?= isset($messages['success']) ? $messages['success'] : '' ?></p>
-<p><?= isset($errors['record']) ? $errors['record'] : '' ?></p>
-<p><?= isset($errors['duplicate']) ? $errors['duplicate'] : '' ?></p>
-<p><?= isset($errors['length']) ? $errors['length'] : '' ?></p>
-<form action="addAuthor.php" method="POST">
-    <p>
+<p class="text-success"><?= isset($messages['success']) ? $messages['success'] : '' ?></p>
+<p class="text-danger"><?= isset($errors['record']) ? $errors['record'] : '' ?></p>
+<p class="text-danger"><?= isset($errors['duplicate']) ? $errors['duplicate'] : '' ?></p>
+<p class="text-danger"><?= isset($errors['length']) ? $errors['length'] : '' ?></p>
+<form action="addAuthor.php" method="POST"  role="form">
+    <div class="form-group">
         <label for="authorName">Автор:</label>
-        <input name="authorName" value="<?= isset($authorName) ? $authorName : '' ?>" />
-        <input type="submit" value="Добави" />
-    </p>
+        <input name="authorName" id="authorName" value="<?= isset($authorName) ? $authorName : '' ?>" class="form-control" />
+    </div>
+    <div class="form-group">       
+        <button type="submit" class="btn btn-default">Добави</button>
+
+    </div>
 </form>
 
 <?php if ($countAuthors > 0) { ?>
-    <table>
-        <tr>
-            <th>Автори</th>
-        </tr>
-        <?php foreach ($authors as $author_id => $author_name) { ?>
-            <tr>
-                <td><a href="allAuthorBooks.php?author_id=<?= $author_id ?>"><?= $author_name ?></a> </td>
-            </tr>
-        <?php } ?>
-    </table>
+    <div class="container">
+        <h3>Автори</th>
+            <ul class="list-unstyled">
+                <?php foreach ($authors as $author_id => $author_name) { ?>
+                    <li><a href="index.php?author_id=<?= $author_id ?>"><?= $author_name ?></a> </li>
+                <?php } ?>
+            </ul>
+    </div>
 <?php } else {
     ?>
-    <p>Няма въведени автори</p>
+    <p class="text-danger">Няма въведени автори</p>
     <?php
 }
 include 'includes/footer.php';

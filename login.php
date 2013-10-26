@@ -33,17 +33,19 @@ if (isset($_SESSION['isLogged'])) {
 include 'includes/header.php';
 ?>
 <h2>Вход</h2>
-<form action="login.php" method="POST">
-    <p class="error"><?= isset($errors['notLogged']) ? $errors['notLogged'] : '' ?></p>
-    <p>
+<form action="login.php" method="POST" role="form">
+    <p class="text-danger"><?= isset($errors['notLogged']) ? $errors['notLogged'] : '' ?></p>
+    <div class="form-group">
         <label for="name">Име:</label>
-        <input type="text" name="name" value="<?= $name ?>" />
-    </p>
-    <p>
+        <input type="text" id="name" name="name" value="<?= $name ?>" class="form-control" />
+    </div>
+    <div class="form-group">
         <label for="password">Парола:</label>
-        <input type="password" name="password" />
-    </p>
-    <input type="submit" value="Вход" />
+        <input type="password" id="password" name="password" class="form-control" />
+    </div> 
+    <div class="form-group">
+    <button type="submit" class="btn btn-default">Вход</button>
+    </div>
 </form>
 <?php
 include 'includes/footer.php';

@@ -45,19 +45,21 @@ if (isset($_SESSION['isLogged'])) {
 include 'includes/header.php';
 ?>
 <h2>Регистрация</h2>
-<form action="register.php" method="POST">
-    <p class="error"><?= isset($errors['register']) ? $errors['register'] : '' ?></p>
-        <p>
+<form action="register.php" method="POST" role="form">
+    <p class="text-danger"><?= isset($errors['register']) ? $errors['register'] : '' ?></p>
+    <div class="form-group">
         <label for="name">Име:</label>
-        <input type="text" name="name" value="<?= $name ?>" />
-        <span class="error"><?= isset($errors['name']) ? $errors['name'] : '' ?></span>
-    </p>
-    <p>
+        <input type="text" id="name" name="name" value="<?= $name ?>" class="form-control" />
+        <span class="text-danger"><?= isset($errors['name']) ? $errors['name'] : '' ?></span>
+    </div>
+    <div class="form-group">
         <label for="password">Парола:</label>
-        <input type="password" name="password" />
-        <span class="error"><?= isset($errors['password']) ? $errors['password'] : '' ?></span>
-    </p>
-    <input type="submit" value="Регистрирай" />
+        <input type="password" id="password" name="password" class="form-control" />
+        <span class="text-danger"><?= isset($errors['password']) ? $errors['password'] : '' ?></span>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-default">Регистрирай</button>
+    </div>
 </form>
 <?php
 include 'includes/footer.php'

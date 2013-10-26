@@ -41,25 +41,25 @@ include 'includes/header.php';
 ?>
 
 <h2>Добави книга</h2>
-<p><?= isset($messages['success']) ? $messages['success'] : '' ?></p>
-<p><?= isset($errors['record']) ? $errors['record'] : '' ?></p>
-<p><?= isset($errors['length']) ? $errors['length'] : '' ?></p>
-<form action="addBook.php" method="POST">
-    <p>
+<p class="text-success"><?= isset($messages['success']) ? $messages['success'] : '' ?></p>
+<p class="text-danger"><?= isset($errors['record']) ? $errors['record'] : '' ?></p>
+<p class="text-danger"><?= isset($errors['length']) ? $errors['length'] : '' ?></p>
+<form action="addBook.php" method="POST" role="form">
+    <div class="form-group">
         <label for="bookTitle">Заглавие:</label>
-        <input name="bookTitle" value="<?= isset($bookTitle) ? $bookTitle : '' ?>" />
-    </p>
-    <p>
-        <select name="authors[]" multiple="multiple">
+        <input name="bookTitle" id="bookTitle" value="<?= isset($bookTitle) ? $bookTitle : '' ?>" class="form-control" />
+    </div>
+    <div class="form-group">
+        <select name="authors[]" multiple="multiple" class="form-control">
             <?php foreach ($authors as $key => $value) { ?>
                 <option value="<?= $key ?>" <?= in_array($key, $selectedAuthors) ? 'selected=selected' : '' ?>>
                     <?= $value ?></option>
             <?php } ?>            
         </select>
-    </p>
-    <p>
-        <input type="submit" value="Добави" />
-    </p>
+    </div>
+   <div class="form-group">
+        <button type="submit" class="btn btn-default">Добави</button>
+   </div>
 </form>
 <?php
 include 'includes/footer.php';
