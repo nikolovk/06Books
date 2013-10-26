@@ -29,9 +29,10 @@ if (isset($_GET['book_id'])) {
                 $data['errors']['content'] = 'Коментарът трябва да бъде поне 10 символа!';
                 $data['newComment'] = $content;
             } else {
+                $now = new DateTime('NOW', new DateTimeZone('Europe/Sofia'));
                 $sqlInsert = 'INSERT INTO comments (content,user_id,book_id,date) 
                             VALUES ("' . $content . '",' . $_SESSION['id'] . ',' . $book_id . ',
-                           "' . (new DateTime('NOW', new DateTimeZone('Europe/Sofia')))->format('Y-m-d H:i:s') . '")';
+                           "' . ($now->format("Y-m-d H:i:s")) . '")';
                 $query = mysqli_query($connection, $sqlInsert);
                 if (!$query) {
                     echo 'Connection problem';
