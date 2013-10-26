@@ -31,7 +31,7 @@ if (isset($_GET['book_id'])) {
             } else {
                 $sqlInsert = 'INSERT INTO comments (content,user_id,book_id,date) 
                             VALUES ("' . $content . '",' . $_SESSION['id'] . ',' . $book_id . ',
-                           "' . (new DateTime('NOW', new DateTimeZone('EET')))->format('Y-m-d H:i:s') . '")';
+                           "' . (new DateTime('NOW', new DateTimeZone('Europe/Sofia')))->format('Y-m-d H:i:s') . '")';
                 $query = mysqli_query($connection, $sqlInsert);
                 if (!$query) {
                     echo 'Connection problem';
@@ -58,7 +58,7 @@ if (isset($_GET['book_id'])) {
             $data['comments']['content'][] = $row['content'];
             $data['comments']['name'][] = $row['name'];
             $data['comments']['id'][] = $row['id'];
-            $data['comments']['date'][] = new DateTime($row['date'], new DateTimeZone('EET'));
+            $data['comments']['date'][] = new DateTime($row['date'], new DateTimeZone('Europe/Sofia'));
         }
     } else {
         $data['errors']['hasBook'] = false;
